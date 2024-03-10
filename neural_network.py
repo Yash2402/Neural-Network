@@ -1,80 +1,82 @@
-import csv
-
 import numpy as np
-import pygame
 
 
 class NeuralNetwork:
     def __init__(
         self,
         setup,
-        TrainingData: list,
-        TestingData: list,
-        weight1,
-        weight2,
-        bias1,
-        bias2,
+        TestingData,
+        TestingLables,
+        TrainingData,
+        TrainingLables,
     ):
-        self.setup = setup
         self.TrainingData = TrainingData
         self.TestingData = TestingData
-        self.node1 = np.zeros((785, 1))
-        self.node2 = np.zeros((20, 1))
-        self.node3 = np.zeros((10, 1))
-        self.weight1 = weight1
-        self.weight2 = weight2
-        self.bias1 = bias1
-        self.bias2 = bias2
+        self.TrainingLables = TrainingLables
+        self.TestingLables = TestingLables
+        self.W1 = np.random.randn(setup[1], setup[0])
+        self.W2 = np.random.randn(setup[1], setup[2])
+        self.b1 = np.random.randn(setup[1], 1)
+        self.b2 = np.random.randn(setup[2], 1)
 
-    # @staticmethod
-    # def sigmoid():
+    @staticmethod
+    def softmax(Z):
+        A = np.exp(Z) / np.sum(np.exp(Z))
+        return A
 
-    def train(self):
-        for i in range(1, len(self.TrainingData)):
-            for j in range(785):
-                self.node1[j] = self.TrainingData[i][j]
+    @staticmethod
+    def ReLU(Z):
+        return np.maximum(0, Z)
 
+    @staticmethod
+    def one_hot(Y):
+        one_hot_Y = np.zeros((Y.size, Y.max() + 1))
+        one_hot_Y[np.arange(Y.size), Y] = 1
+        one_hot_Y = one_hot_Y.T
+        return one_hot_Y
 
-setup = [785, 20, 10]
-file = open("data/mnist_test.csv", "r")
-data = list(csv.reader(file))
+    @staticmethod
+    def derivativeReLU(Z):
+        return Z > 0
 
-weight1 = np.random.uniform(-0.5, 0.5, (20, 785))
-weight2 = np.random.uniform(-0.5, 0.5, (10, 20))
-bias1 = np.zeros((20, 1))
-bias2 = np.zeros((10, 1))
-nn = NeuralNetwork(setup, data[:100], data[100:200], weight1, weight2, bias1, bias2)
+    @staticmethod
+    def getPredictions(A2):
+        return np.argmax(A2, 0)
 
-k = 1
-tile_size = 20
-screen = pygame.display.set_mode((28 * tile_size, 28 * tile_size), pygame.RESIZABLE)
-run = True
-while run:
-    screen.fill((255, 255, 255))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-        if pygame.mouse.get_pressed()[0]:
-            k += 1
-        if pygame.mouse.get_pressed()[2]:
-            k -= 1
-        if pygame.key.get_pressed() and event.type == pygame.K_SPACE:
-            pass
+    @staticmethod
+    def getAccuracy(predictions, Y):
+        print(predictions, Y)
+        return np.sum(predictions == Y) / Y.size
 
-    u = 0
-    nn.train()
-    for i in range(28):
-        for j in range(28):
-            if k != 0:
-                pygame.draw.rect(
-                    screen,
-                    (int(data[k][u]), int(data[k][u]), int(data[k][u])),
-                    ((j * tile_size), (i * tile_size), tile_size, tile_size),
+    def forwardPropagation(self):
+        self.Z1 = self.W1.dot(self.TrainingData) + self.b1
+        self.A1 = NeuralNetwork.ReLU(self.Z1)
+        self.Z2 = self.W2.dot(self.A1) + self.b2
+        self.A2 = NeuralNetwork.softmax(self.Z2)
+
+    def backPropagation(self, m):
+        one_hot_Y = NeuralNetwork.one_hot(self.TrainingLables)
+        self.dZ2 = self.A2 - one_hot_Y
+        self.dW2 = (1 / m) * (self.dZ2.dot(self.A1.T))
+        self.db2 = (1 / m) * (np.sum(self.dZ2))
+        self.dZ1 = self.W2.T.dot(self.dZ2) * NeuralNetwork.derivativeReLU(self.Z1)
+        self.dW1 = (1 / m) * (self.dZ1.dot(self.TrainingData.T))
+        self.db1 = (1 / m) * (np.sum(self.dZ1))
+
+    def updateParameters(self, alpha):
+        self.W1 = self.W1 - alpha * self.dW1
+        self.b1 = self.b1 - alpha * self.db1
+        self.W2 = self.W2 - alpha * self.dW2
+        self.b2 = self.b2 - alpha * self.db2
+
+    def gradientDescent(self, iteration, alpha, m):
+        for i in range(iteration):
+            self.forwardPropagation()
+            self.backPropagation(m)
+            self.updateParameters(alpha)
+            if i % 10 == 0:
+                print(f"Iteration: {i}")
+                predictions = NeuralNetwork.getPredictions(self.A2)
+                print(
+                    f"Accuracy: {NeuralNetwork.getAccuracy(predictions, self.TrainingLables)}"
                 )
-                u += 1
-            else:
-                pygame.draw.rect(
-                    screen, (0, 0, 0), (0, 0, 28 * tile_size, 28 * tile_size)
-                )
-
-    pygame.display.update()
