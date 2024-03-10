@@ -1,9 +1,13 @@
 # Basic Neural Network on MNIST Dataset
-A deep neural network model with one hidden layer that can classify digits from 0-9 (MNIST Dataset).
+A deep neural network model with one hidden layer that can classify digits from 0-9 (MNIST Dataset). This Neural Network contains 3 layer [284, 10, 10].
 
 # Run
 ```bash
-git clone https://github.com/Yash2402/Neural-Network.git
+git clone https://github.com/Yash2402/neural-network.git
 ```
-After cloning repository, download MNIST Dataset [Mnist Dataset](https://drive.google.com/drive/folders/1pYPgCPVr3MCSMz_lUHxfwzbWViPNnaON?usp=share_link), unzip it and then store this in ```neural-network/``` folder
-# neural-network
+After cloning repository, download MNIST Dataset [Mnist Dataset](https://drive.google.com/drive/folders/1pYPgCPVr3MCSMz_lUHxfwzbWViPNnaON?usp=share_link), unzip it and then store the ```data/``` folder in ```neural-network/``` folder.
+```bash
+cd neural-network
+pip3 install -r requirements.txt
+python3 main.py [max_iterations] [learning_rate]
+```

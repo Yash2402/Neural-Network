@@ -1,7 +1,11 @@
+import sys
+
 import numpy as np
 import pandas as pd
 
 from neural_network import NeuralNetwork
+
+iteration, learning_rate = sys.argv[1], sys.argv[2]
 
 data = np.array(pd.read_csv("data/mnist_train.csv"))
 np.random.shuffle(data)
@@ -16,4 +20,4 @@ X_train = data_train[1:n]
 
 setup = [784, 10, 10]
 nn = NeuralNetwork(setup, X_dev, Y_dev, X_train, Y_train)
-nn.gradientDescent(500, 0.01, m)
+nn.gradientDescent(iteration, learning_rate, m)
