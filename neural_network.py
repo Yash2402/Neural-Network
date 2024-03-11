@@ -14,19 +14,19 @@ class NeuralNetwork:
         self.TestingData = TestingData
         self.TrainingLables = TrainingLables
         self.TestingLables = TestingLables
-        self.W1 = np.random.randn(setup[1], setup[0])
-        self.W2 = np.random.randn(setup[1], setup[2])
-        self.b1 = np.random.randn(setup[1], 1)
-        self.b2 = np.random.randn(setup[2], 1)
+        self.W1 = np.random.rand(setup[1], setup[0]) - 0.5
+        self.W2 = np.random.rand(setup[1], setup[2]) - 0.5
+        self.b1 = np.random.rand(setup[1], 1) - 0.5
+        self.b2 = np.random.rand(setup[2], 1) - 0.5
 
     @staticmethod
     def softmax(Z):
-        A = np.exp(Z) / np.sum(np.exp(Z))
+        A = np.exp(Z) / sum(np.exp(Z))
         return A
 
     @staticmethod
     def ReLU(Z):
-        return np.maximum(0, Z)
+        return np.maximum(Z, 0)
 
     @staticmethod
     def one_hot(Y):
