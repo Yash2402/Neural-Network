@@ -2,7 +2,7 @@ import csv
 
 import numpy as np
 
-from train import X_dev, Y_dev, nn, setup
+from train import nn, setup
 
 with open("nndata.csv") as file:
     data = list(csv.reader(file))
@@ -33,4 +33,10 @@ W1 = np.array(W1)
 W2 = np.array(W2)
 b1 = np.array(b1)
 b2 = np.array(b2)
+
 nn.W1, nn.W2, nn.b1, nn.b2 = W1, W2, b1, b2
+
+nn.testPrediction(0)
+nn.testPrediction(1)
+nn.testPrediction(2)
+nn.testPrediction(3)

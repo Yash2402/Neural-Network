@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 class NeuralNetwork:
@@ -48,8 +49,8 @@ class NeuralNetwork:
         print(predictions, Y)
         return np.sum(predictions == Y) / Y.size
 
-    def forwardPropagation(self):
-        self.Z1 = self.W1.dot(self.TrainingData) + self.b1
+    def forwardPropagation(self, X):
+        self.Z1 = self.W1.dot(X) + self.b1
         self.A1 = NeuralNetwork.ReLU(self.Z1)
         self.Z2 = self.W2.dot(self.A1) + self.b2
         self.A2 = NeuralNetwork.softmax(self.Z2)
@@ -71,7 +72,7 @@ class NeuralNetwork:
 
     def gradientDescent(self, iteration, alpha, m):
         for i in range(iteration):
-            self.forwardPropagation()
+            self.forwardPropagation(self.TrainingData)
             self.backPropagation(m)
             self.updateParameters(alpha)
             if i % 10 == 0:
@@ -80,3 +81,19 @@ class NeuralNetwork:
                 print(
                     f"Accuracy: {NeuralNetwork.getAccuracy(predictions, self.TrainingLables)}"
                 )
+
+    def makePrediction(self, X):
+        self.forwardPropagation(X)
+        prediction = NeuralNetwork.getPredictions(self.A2)
+        return prediction
+
+    def testPrediction(self, index):
+        current_image = self.TestingData[:, index, None]
+        prediction = self.makePrediction(current_image)
+        label = self.TestingLables[index]
+        print("Prediction: ", prediction)
+        print("Label: ", label)
+        current_image = current_image.reshape((28, 28)) * 255
+        plt.gray()
+        plt.imshow(current_image, interpolation="nearest")
+        plt.show()
