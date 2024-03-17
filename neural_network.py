@@ -91,9 +91,12 @@ class NeuralNetwork:
         current_image = self.TestingData[:, index, None]
         prediction = self.makePrediction(current_image)
         label = self.TestingLabels[index]
-        print("Prediction: ", prediction)
+        print(
+            f"Prediction: {prediction} {(list(prediction).count(label)*100 / len(prediction))} %"
+        )
         print("Label: ", label)
         current_image = current_image.reshape((28, 28)) * 255
         plt.gray()
         plt.imshow(current_image, interpolation="nearest")
         plt.show()
+        plt.close()
