@@ -11,7 +11,7 @@ After cloning repository, download MNIST Dataset [Mnist Dataset](https://drive.g
 ```bash
 cd neural-network
 pip3 install -r requirements.txt
-python3 train.py [max_iterations] [learning_rate]
+python3 train.py [max_iterations] [learning_rate] # max_iterations = 3000 and learning_rate = 0.5 works great for me 
 ```
 ## Test the Neural Network
 ```bash
