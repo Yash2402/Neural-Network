@@ -7,14 +7,14 @@ class NeuralNetwork:
         self,
         setup,
         TestingData,
-        TestingLables,
+        TestingLabels,
         TrainingData,
-        TrainingLables,
+        TrainingLabels,
     ):
         self.TrainingData = TrainingData
         self.TestingData = TestingData
-        self.TrainingLables = TrainingLables
-        self.TestingLables = TestingLables
+        self.TrainingLabels = TrainingLabels
+        self.TestingLabels = TestingLabels
         self.W1 = np.random.rand(setup[1], setup[0]) - 0.5
         self.W2 = np.random.rand(setup[1], setup[2]) - 0.5
         self.b1 = np.random.rand(setup[1], 1) - 0.5
@@ -56,7 +56,7 @@ class NeuralNetwork:
         self.A2 = NeuralNetwork.softmax(self.Z2)
 
     def backPropagation(self, m):
-        one_hot_Y = NeuralNetwork.one_hot(self.TrainingLables)
+        one_hot_Y = NeuralNetwork.one_hot(self.TrainingLabels)
         self.dZ2 = self.A2 - one_hot_Y
         self.dW2 = (1 / m) * (self.dZ2.dot(self.A1.T))
         self.db2 = (1 / m) * (np.sum(self.dZ2))
@@ -79,7 +79,7 @@ class NeuralNetwork:
                 print(f"Iteration: {i}")
                 predictions = NeuralNetwork.getPredictions(self.A2)
                 print(
-                    f"Accuracy: {NeuralNetwork.getAccuracy(predictions, self.TrainingLables)}"
+                    f"Accuracy: {NeuralNetwork.getAccuracy(predictions, self.TrainingLabels)}"
                 )
 
     def makePrediction(self, X):
@@ -90,7 +90,7 @@ class NeuralNetwork:
     def testPrediction(self, index):
         current_image = self.TestingData[:, index, None]
         prediction = self.makePrediction(current_image)
-        label = self.TestingLables[index]
+        label = self.TestingLabels[index]
         print("Prediction: ", prediction)
         print("Label: ", label)
         current_image = current_image.reshape((28, 28)) * 255
