@@ -49,6 +49,8 @@ python3 train.py [max_iterations] [learning_rate] # max_iterations = 3000 and le
 python3 test.py
 ```
 
+Note: To see the next prediction close the matplotlib window
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/Yash2402/neural-network/blob/main/LICENSE) file for details.

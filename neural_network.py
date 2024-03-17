@@ -98,5 +98,7 @@ class NeuralNetwork:
         current_image = current_image.reshape((28, 28)) * 255
         plt.gray()
         plt.imshow(current_image, interpolation="nearest")
+        plt.xlabel("Pixel")
+        plt.ylabel("Pixel")
         plt.show()
         plt.close()
