@@ -5,10 +5,11 @@ import numpy as np
 from train import nn, setup
 
 with open("nndata.csv") as file:
+
     data = list(csv.reader(file))
+
     W1 = []
-    print(data[1])
-    for i in range(len(data) - setup[1] + len(setup[1:])):
+    for i in range(len(data) - (setup[1] + len(setup[1:]))):
         temp = []
         for j in range(len(data[i])):
             temp.append(float(data[i][j]))
@@ -36,7 +37,5 @@ b2 = np.array(b2)
 
 nn.W1, nn.W2, nn.b1, nn.b2 = W1, W2, b1, b2
 
-nn.testPrediction(0)
-nn.testPrediction(1)
-nn.testPrediction(2)
-nn.testPrediction(3)
+for i in range(100):
+    nn.testPrediction(i)
